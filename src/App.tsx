@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import Auth from "./pages/Auth";
 import UserManagement from "./pages/UserManagement";
 import { DashboardLayout } from "./components/DashboardLayout";
@@ -25,9 +26,12 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <ErrorBoundary>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter
+        basename={import.meta.env.BASE_URL === "/" ? undefined : import.meta.env.BASE_URL.replace(/\/$/, "")}
+      >
         <Routes>
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<DashboardLayout />}>
@@ -49,6 +53,7 @@ const App = () => (
           </Route>
         </Routes>
       </BrowserRouter>
+      </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );
